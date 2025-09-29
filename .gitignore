@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Foundry
+out/
+lib/
+.cache/
+
+# Env
+.env
+*.secret
+*.key
+*.pem
+secrets.json
+
+# OS
+.DS_Store
