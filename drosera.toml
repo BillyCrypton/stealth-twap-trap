@@ -1,0 +1,17 @@
+ethereum_rpc = ""
+drosera_rpc = ""
+drosera_address = ""
+
+[traps]
+
+[traps.stealth_twap]
+path = "out/StealthTWAPTrap.sol/StealthTWAPTrap.json"
+response_contract = "0x0000000000000000000000000000000000000000"
+response_function = "executeOrder(bytes32)"
+cooldown_period_blocks = 10
+min_number_of_operators = 2
+max_number_of_operators = 5
+block_sample_size = 5
+private_trap = false
+whitelist = []
+address = "0x0000000000000000000000000000000000000000"
