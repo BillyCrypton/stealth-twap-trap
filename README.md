@@ -1,72 +1,67 @@
 # Stealth TWAP Trap on Drosera (Hoodi Testnet)
 
-This repository contains smart contracts, scripts, and configuration for deploying a **Stealth Time-Weighted Average Price (TWAP) Trap** on the **Drosera network**, powered by **Hoodi Ethereum testnet**.  
-
-The setup includes:
-- `StealthTWAPTrap.sol` → Core trap contract
-- `StealthTWAPResponse.sol` → Response handler contract (emits events when trap triggers)
-- Deployment + testing scripts
-- TOML configs for Drosera trap execution
+A next-generation Drosera trap engineered to monitor **time-weighted average price (TWAP)** anomalies on-chain and respond instantly to deviations beyond a safe threshold. This system empowers DeFi users with automated detection, real-time event emission, and secure private execution using the Hoodi Ethereum testnet.
 
 ---
 
-## 📂 Project Structure
+## Overview
 
-├── foundry.toml
-├── drosera.toml
-├── remappings.txt
-├── src
-│ ├── StealthTWAPTrap.sol
-│ └── StealthTWAPResponse.sol
-├── script
-│ └── DeployTrap.s.sol
-└── test
-└── StealthTWAPTrap.t.sol
+In decentralized finance, sudden TWAP deviations can expose protocols to manipulation, arbitrage exploits, and liquidation cascades. A malicious whale or flash loan attack can distort prices temporarily, allowing unfair trading opportunities and threatening liquidity pools.  
+
+The **Stealth TWAP Trap** is designed as a protective layer to detect and respond to such threats with speed, precision, and minimal resource consumption.  
+
+What makes this trap exceptional:
+- **Lightweight monitoring**: Uses efficient block sampling instead of heavy oracles.  
+- **Real-time TWAP computation**: Detects deviations immediately as blocks finalize.  
+- **Customizable thresholds**: Set sensitivity (e.g., 5%, 10%) to tune detection.  
+- **Secure responses**: Routes execution through a dedicated response contract.  
+- **Private execution**: Whitelisting ensures only your authorized operator address can manage or respond.  
 
 ---
 
-## 📊 Architecture Flow
+## What it Detects
 
-```mermaid
-flowchart LR
-    A[StealthTWAPTrap] -- Detects TWAP condition --> B[Drosera Network]
-    B -- Routes execution --> C[StealthTWAPResponse]
-    C -- Emits event --> D[(On-chain Logs)]
+- **TWAP Breaches**: Flags deviations beyond the defined threshold.  
+- **Price Manipulation**: Identifies abnormal swings that might indicate flash loan attacks.  
+- **Stalled Prices**: Detects when TWAP stops updating, often a sign of faulty feeds.  
+- **Edge Cases**: Handles malformed or unexpected block data gracefully to avoid false positives.  
 
-    subgraph User
-      E[Whitelisted Operator<br>0xfb3d951fa8496c6933ea0275695bca906c58527e]
-    end
+---
 
-    E -- Deploys & Configures --> A
-    E -- Reads events --> D
-Workflow Example
+## How it Works
 
-Block Sampling
+1. **Data Collection**  
+   - The trap samples price feeds or internal signals across a block window.  
 
-Trap collects price data over sample_window_blocks (e.g., 20 blocks).
+2. **TWAP Computation**  
+   - Computes the average price across the sampling window, smoothing volatility.  
 
-TWAP Calculation
+3. **Threshold Check**  
+   - Compares computed TWAP with the last stable TWAP.  
+   - If deviation exceeds threshold (e.g., 10%), a response is prepared.  
 
-Trap computes the time-weighted average price.
+4. **Secure Response Trigger**  
+   - Encodes the response and calls the `StealthTWAPResponse` contract.  
+   - Security is enforced with `onlyAuthorizedTrap` modifier and private whitelist.  
 
-Threshold Check
+5. **Event Emission**  
+   - The response contract emits `TWAPTriggered(token, twapValue, triggeredBy)` for monitoring and automation.  
 
-If the TWAP exceeds the set threshold, the trap conditions are met.
+6. **Monitoring**  
+   - Off-chain bots or dashboards listen for emitted events and trigger protocol-level defenses (pauses, alerts, etc.).  
 
-Drosera Trigger
+---
 
-Drosera operator detects the breach and calls the trap’s configured respond function.
+## Prerequisites
 
-Response Execution
+- [Foundry](https://getfoundry.sh/) for compilation and deployment.  
+- Drosera CLI for trap registration.  
+- Ethereum wallet with funds on Hoodi testnet (**chain ID 560048**).  
 
-Drosera routes the call to StealthTWAPResponse.handleTWAPEvent(address,uint256).
+---
 
-Event Emission
+## Deployment Steps
 
-The response contract emits TWAPTriggered(token, twapValue, triggeredBy).
-
-Off-chain Monitoring
-
-Whitelisted operator (your address) listens to the emitted event logs.
-
-This proves trap execution and can trigger further automation.
+1. **Set Up Terminal**:  
+   ```bash
+   mkdir ~/twap_trap && cd ~/twap_trap
