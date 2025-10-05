@@ -65,3 +65,39 @@ What makes this trap exceptional:
 1. **Set Up Terminal**:  
    ```bash
    mkdir ~/twap_trap && cd ~/twap_trap
+## Initialize Project:
+forge init
+## Install Dependancies:
+forge install OpenZeppelin/openzeppelin-contracts
+forge install foundry-rs/forge-std
+## Add contratcs:
+src/StealthTWAPTrap.sol
+src/StealthTWAPResponse.sol
+## Configure Remappings:
+echo "@openzeppelin/=lib/openzeppelin-contracts/" > remappings.txt
+echo "forge-std/=lib/forge-std/src/" >> remappings.txt
+## Compile:
+forge build
+## Deploy:
+forge script script/DeployTrap.s.sol \
+  --rpc-url https://ethereum-hoodi-rpc.publicnode.com \
+  --private-key $PRIVATE_KEY \
+  --broadcast
+## Update Config: Add deployed addresses to drosera.toml
+## Register Trap:
+drosera register --config drosera.toml
+## Deployed Addresses
+Trap Contract: 0x<YourDeployedTrapAddress>
+Response Contract: 0x<YourDeployedResponseAddress>
+## Simulate TWAP breach:
+cast send 0x<TrapAddress> "simulateTWAP(uint256)" 120 \
+--rpc-url https://ethereum-hoodi-rpc.publicnode.com \
+--private-key $PRIVATE_KEY
+## Check Response Logs:
+cast logs --rpc-url https://ethereum-hoodi-rpc.publicnode.com \
+0x<ResponseContractAddress>
+## Contribution
+cast logs --rpc-url https://ethereum-hoodi-rpc.publicnode.com \
+0x<ResponseContractAddress>
+## License
+MIT
