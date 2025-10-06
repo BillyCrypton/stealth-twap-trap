@@ -30,5 +30,3 @@ contract StealthTWAPResponseTest is Test {
         response.handleTWAPEvent(address(0x123), 1000);
     }
 }
-
-}
