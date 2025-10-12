@@ -30,7 +30,7 @@ contract MockRouter {
         uint256 amountOut = amountIn;
         IERC20(path[path.length - 1]).safeTransfer(to, amountOut);
 
-        // ✅ allocate array of length 2
+        // ✅ Allocate array correctly
         amounts = new uint256 ;
         amounts[0] = amountIn;
         amounts[1] = amountOut;
@@ -43,7 +43,7 @@ contract MockRouter {
     ) external pure returns (uint256[] memory amounts) {
         require(path.length >= 2, "Invalid path");
 
-        // ✅ allocate array of length 2
+        // ✅ Allocate array correctly
         amounts = new uint256 ;
         amounts[0] = amountIn;
         amounts[1] = amountIn;
