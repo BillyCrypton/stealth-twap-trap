@@ -4,46 +4,33 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-# Solidity compiler settings
 solc = "0.8.20"
 optimizer = true
 optimizer_runs = 200
 evm_version = "shanghai"
 
-# Remappings for libraries
 remappings = [
     "@openzeppelin/=lib/openzeppelin-contracts/",
     "forge-std/=lib/forge-std/src/"
 ]
 
-# Test and permission settings
 fs_permissions = [
     { access = "read", path = "./out" },
     { access = "read", path = "./lib" }
 ]
 
-# Gas report
 gas_reports = ["*"]
 gas_price = "auto"
 
-# Logging verbosity
 verbosity = 3
 
-# Format preferences
 bytecode_hash = "none"
 cbor_metadata = false
 
-# Hoodi Testnet RPC configuration
 [rpc_endpoints]
 hoodi = "https://ethereum-hoodi-rpc.publicnode.com"
 drosera = "https://relay.hoodi.drosera.io"
 
-# (Optional) Environment variables for private key and wallet
-# These can be exported in Termius as:
-# export HOODI_RPC_URL="https://ethereum-hoodi-rpc.publicnode.com"
-# export PRIVATE_KEY="your_wallet_private_key"
-
-# Foundry formatting settings
 [fmt]
 line_length = 100
 tab_width = 4
@@ -51,11 +38,9 @@ bracket_spacing = true
 quote_style = "double"
 int_types = "long"
 
-# Fuzz testing configuration
 [fuzz]
 runs = 256
 
-# Invariant testing configuration
 [invariant]
 runs = 50
 depth = 20
